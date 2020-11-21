@@ -1,0 +1,8 @@
+CAN DO:
+
+getdata[x]
+postdata[x]
+add players to lobby[]
+
+
+LOOP:
