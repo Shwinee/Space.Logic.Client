@@ -7,6 +7,7 @@ const path = require('path');
 
 const player = acci.name;
 
+const url = 'http://localhost:3000/';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -36,7 +37,7 @@ async function onstarts(){
           },
           body: JSON.stringify(data)
         };
-        fetch('https://sparcarc.herokuapp.com/new', options);
+        fetch(url+'new', options);
         let idontseethesun = {
           name: name,
           pass: pass
@@ -52,7 +53,7 @@ async function onstarts(){
   else {
     var nv = false;
     var pv = false;
-    const response = await fetch('https://sparcarc.herokuapp.com/players');
+    const response = await fetch(url+'players');
     const data = await response.json();
     const name = acci.name;
     const pass = acci.pass;
@@ -110,20 +111,33 @@ function valid(name, pass){
   }
 }
 async function coms(){
-  const response = await fetch('https://sparcarc.herokuapp.com/coms');
+  const response = await fetch(url+'coms');
   const data = await response.json();
 
   const list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const messages = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+  const messages = [];
+
+  // we need a set amount of
+  //
+  //
+  //
+  var sucks;
+
+
+
   console.clear();
   data.forEach((item, i) => {
+
     var index = item.fall
     var arc = item;
 
+    var sucks = list.length;
+    list.push(sucks);
 
 
     list.forEach((item, i) => {
       if (index == item){
+        messages.push('');
         messages[item] = arc;
       }
     });
@@ -152,13 +166,34 @@ async function coms(){
   console.log(`|_____________________________|____________________|`);
   input('com');
 }
-function game(){
+async function game(){
   //idea just put vars in the log functiuon lul
+  const yuh = await fetch(url+'updateplanets');
+  const yuhh = await yuh;
+  //ignore this
+
+  const response = await fetch(url+'gamedata');
+  const data = await response.json();
+  const yikes = "-----------------------------";
+
+
+  var fuel = `Ship's fuel: ${data.ship.fuel.toString()}`;
+  var power = `Ship's power: ${data.ship.power.toString()}%`
+
+  d = Math.abs(fuel.length - yikes.length);
+  for (d > -1; d--;){
+    fuel += ' ';
+  }
+  d = Math.abs(power.length - yikes.length);
+  for (d > -1; d--;){
+    power += ' ';
+  }
+
   console.log(`.__________________________________________________.`);
   console.log(`|The Arc                      |             6:40 am|`);
   console.log(`|-----------------------------|--------------------|`);
-  console.log(`|Ships fuel: 500,000kg        | (q) quit           |`);
-  console.log(`|Ships power: 100             | (p) power info     |`);
+  console.log(`|${fuel}| (q) quit           |`);
+  console.log(`|${power}| (p) power info     |`);
   console.log(`|Ships oxygen: 80%            | (c) crew info      |`);
   console.log(`|                             | (pf) planet finder |`);
   console.log(`|                             | (r) reload         |`);
@@ -167,7 +202,7 @@ function game(){
   input('main');
 }
 async function crew(){
-  const response = await fetch('https://sparcarc.herokuapp.com/players');
+  const response = await fetch(url+'players');
   const data = await response.json();
 
   var thatwasfunny = 'A: ${a.name}                 ';
@@ -324,7 +359,7 @@ function input(gamemode){
           },
           body: JSON.stringify(data)
         };
-        fetch('https://sparcarc.herokuapp.com', options);
+        fetch(url+'com', options);
       }
     }
     if (gamemode == 'com'){
@@ -332,6 +367,12 @@ function input(gamemode){
       const command = message[0];
       const content = message[1];
       const player = acci.name;
+      var commands = ["b", "r", "q", "s"];
+      commands.forEach((item, i) => {
+        if (command == item){
+          valid = 1;
+        }
+      });
       if (command == 'b'){
         console.clear();
         game();
@@ -344,29 +385,29 @@ function input(gamemode){
         process.exit();
       }
       if (command == 's'){
-        const data = { player, content };
-        const options = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        };
-        fetch('https://sparcarc.herokuapp.com/coms', options);
+        if (content.length <= 20){
+          const data = { player, content };
+          const options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          };
+          fetch(url+'coms', options);
+        }
+        coms();
       }
-      console.clear();
-      coms();
+      if (valid == 0){
+        console.clear();
+        coms();
+      }
     }
   });
 }
-
-
-
-
-
 async function pf(){
   console.clear();
-  const response = await fetch('https://sparcarc.herokuapp.com/planets');
+  const response = await fetch(url+'planets');
   const data = await response.json();
 
   var thatwasfunny = 'A: ${a.name}                 ';
@@ -431,7 +472,7 @@ async function showplanet(planet){
   var b;
   var c;
 
-  const response = await fetch('https://sparcarc.herokuapp.com/planets');
+  const response = await fetch(url+'planets');
   const data = await response.json();
   data.forEach(obj => {
     Object.entries(obj).forEach(([key, value]) => {
@@ -619,7 +660,7 @@ async function showplanet(planet){
     console.log(`|_________________________________________________|`);
 
   }
-  input('pi')
+  input('pi');
 }
 //example sutff
 // var game = 1;
