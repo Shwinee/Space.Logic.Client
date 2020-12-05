@@ -7,7 +7,7 @@ const path = require('path');
 
 const player = acci.name;
 
-const url = 'http://localhost:3000/';
+const url = 'https://sparcarc.herokuapp.com/';
 
 const rl = readline.createInterface({
   input: process.stdin,
